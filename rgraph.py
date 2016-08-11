@@ -35,6 +35,8 @@ class Node:
             self.innodes.append(edge)
     def indegree(self):
         return len(self.innodes)
+    def outdegree(self):
+        return len(self.outedges)
     def getinnodes(self):
         return self.innodes
     def iscomplete(self):
@@ -43,8 +45,6 @@ class Node:
         return False
 class Rgraph(object):    
     nodes = []
-    nodequeue = collections.deque()
-    nodestack = []
     outcompletenodes = []
     def gennodes(self, numnodes):
         for i in range(0, numnodes):
@@ -58,53 +58,65 @@ class Rgraph(object):
         return next
     
     def genedges(self):
-#        nodequeue = collections.deque()
+        nodequeue = collections.deque()
         nodestack = []
+        degree = int(len(self.nodes) / 2)
         # Need to have n/2 out edges and n/2 in edges
         completednodes = []
-        startnode = random.randint(0, len(self.nodes) - 1)
+        start = random.randint(0, len(self.nodes) - 1)
+        node = self.nodes[start]
 
-        node = self.nodes[startnode]
-        self.nodestack.append(node)
-#        self.nodequeue.append(node)
-        while self.nodestack:
-            node = self.nodestack.pop()
-            if node in self.outcompletenodes and len(node.innodes) >= 2:
-                continue
+        possiblenodes = copy.copy(self.nodes)
+        possiblenodes.remove(node)
+        for i in range(0,degree):
+            next = random.randint(0, len(possiblenodes) - 1)
+            nextnode = possiblenodes[next]
+            node.addoutedge(Edge(node, nextnode))
+            nextnode.addinnode(node)
+            possiblenodes.remove(nextnode)
+        for n in possiblenodes:
+            n.addoutedge(Edge(n, node))
+            node.addinnode(n)
+            nodequeue.append(n)
+        completednodes.append(node)
+        print(node.name)
+        print(str(nodequeue))
+        while nodequeue:            
+            node = nodequeue.popleft()
             possiblenodes = copy.copy(self.nodes)
             possiblenodes.remove(node)
-#            print(node)
-#            print(str(self.outcompletenodes))
-            self.outcompletenodes.append(node)
-            self.processnode(node, possiblenodes)
-        
-        #print(node)
-
-    def processnode(self, node, possiblenodes):
-        for pnode in possiblenodes:
-            if pnode in node.getinnodes() or pnode.indegree() >= 2:
-                possiblenodes.remove(pnode)                
-        print(node.name + ":\t" + str(possiblenodes) + "\r\n\t" + str(node.getinnodes()))
-        next = random.randint(0, len(possiblenodes) - 1)
-        nextnode1 = possiblenodes[next]
-        possiblenodes.remove(nextnode1)
-        next = random.randint(0, len(possiblenodes) - 1)
-        nextnode2 = possiblenodes[next]
-        possiblenodes.remove(nextnode2)
-        # While we're at it, add edges for nodes that beat our starting node
-#        for n in possiblenodes:
-#            n.addoutedge(Edge(n, node))
+            for innode in node.getinnodes():
+                if innode in possiblenodes:
+                    possiblenodes.remove(innode)
+            for cnode in  completednodes:
+                if cnode in possiblenodes:
+                    possiblenodes.remove(cnode)
+            if node.outdegree() >= degree:
+                for pnode in possiblenodes:
+                    if pnode.outdegree() < degree:
+                        pnode.addoutedge(Edge(pnode, node))
+                        node.addinnode(pnode)
+                        nodequeue.append(pnode)
+                continue
             
-        if not(nextnode1 in self.outcompletenodes):
-            self.nodestack.append(nextnode1)
-        if not(nextnode2 in self.outcompletenodes):
-            self.nodestack.append(nextnode2)
-
-        node.addoutedge(Edge(node, nextnode1))
-        nextnode1.addinnode(node)
-        node.addoutedge(Edge(node, nextnode2))
-        nextnode2.addinnode(node)
-
+            if len(possiblenodes) == 1:
+                nextnode = possiblenodes[0]
+                node.addoutedge(Edge(node, nextnode))
+                nextnode.addinnode(node)
+                completednodes.append(node)
+            elif len(possiblenodes) >= 1:
+                next = random.randint(0, len(possiblenodes) - 1)
+                nextnode = possiblenodes[next]
+                node.addoutedge(Edge(node, nextnode))
+                nextnode.addinnode(node)
+                possiblenodes.remove(nextnode)
+                for pnode in possiblenodes:
+                    if pnode.outdegree() < degree:
+                        pnode.addoutedge(Edge(pnode, node))
+                        node.addinnode(pnode)
+                        nodequeue.append(pnode)
+                completednodes.append(node)
+        
     def print(self):
         for node in self.nodes:
             print("Node:\t" + str(node))
@@ -114,7 +126,7 @@ class Rgraph(object):
             
 def main():
     rpsgraph = Rgraph()
-    rpsgraph.gennodes(5)
+    rpsgraph.gennodes(7)
     rpsgraph.genedges()
     rpsgraph.print()
 if __name__ == "__main__" : main()
