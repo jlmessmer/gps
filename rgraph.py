@@ -12,7 +12,7 @@ class Edge:
         self.weight = weight
 
     def __str__(self):
-        return self.innode.name + " --> " + self.outnode.name
+        return self.innode.name.zfill(3) + " --> " + self.outnode.name.zfill(3)
 
     def __repr__(self):
         return self.__str__()
@@ -104,29 +104,38 @@ class Rgraph(object):
                 node.addoutedge(Edge(node, nextnode))
                 nextnode.addinnode(node)
                 completednodes.append(node)
+                                
             elif len(possiblenodes) >= 1:
-                next = random.randint(0, len(possiblenodes) - 1)
-                nextnode = possiblenodes[next]
-                node.addoutedge(Edge(node, nextnode))
-                nextnode.addinnode(node)
-                possiblenodes.remove(nextnode)
-                for pnode in possiblenodes:
-                    if pnode.outdegree() < degree:
-                        pnode.addoutedge(Edge(pnode, node))
-                        node.addinnode(pnode)
-                        nodequeue.append(pnode)
+                print(node.name)
+                print(possiblenodes)
+                outdeg = node.outdegree()
+                for i in range(0, degree - outdeg):
+                    next = random.randint(0, len(possiblenodes) - 1)
+                    nextnode = possiblenodes[next]
+                    node.addoutedge(Edge(node, nextnode))
+                    nextnode.addinnode(node)
+                    possiblenodes.remove(nextnode)
+
+                    for pnode in possiblenodes:
+                        if pnode.outdegree() < degree:
+                            pnode.addoutedge(Edge(pnode, node))
+                            node.addinnode(pnode)
+                            nodequeue.append(pnode)                            
                 completednodes.append(node)
         
     def print(self):
+        print("==============================")
         for node in self.nodes:
-            print("Node:\t" + str(node))
+            print("Node:\t" + str(node).zfill(3))
             print("\t" + str(node.outedges))
-            print("\t" + str(node.innodes))
+        print("==============================")
             
             
 def main():
+    size = input("How many moves do you want? ")
+    size = int(size)
     rpsgraph = Rgraph()
-    rpsgraph.gennodes(7)
+    rpsgraph.gennodes(size)
     rpsgraph.genedges()
     rpsgraph.print()
 if __name__ == "__main__" : main()
