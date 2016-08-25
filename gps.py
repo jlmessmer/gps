@@ -26,6 +26,7 @@ class Game:
         print("[1] New Game")
         print("[2] About This")
         print("[3] Quit Game")
+        print("[4] See Graph")
         sel = input("Please enter a selection ")
         sel = int(sel)
         if sel == 1:
@@ -34,6 +35,9 @@ class Game:
             self.about()
         elif sel == 3:
             sys.exit()
+        elif sel == 4:
+            self.graph.print()
+            self.menu()
 
     def gameloop(self):
         print("This game of Graph-Paper-Scissors has %d possible moves (moves 0 - %d)" % (self.size, self.size - 1))
