@@ -59,7 +59,8 @@ class Game:
             input("Press any key to continue")
             self.clear()
             pmove = input("Please make your move, or enter Q to quit ")
-    
+        self.clear()
+        self.menu()
     def newgame(self):
         self.clear()
         print("New Game")
