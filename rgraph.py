@@ -12,7 +12,7 @@ class Edge:
         self.weight = weight
 
     def __str__(self):
-        return self.innode.name.zfill(3) + " --> " + self.outnode.name.zfill(3)
+        return self.innode.name.zfill(4) + " --> " + self.outnode.name.zfill(4)
 
     def __repr__(self):
         return self.__str__()
@@ -27,6 +27,13 @@ class Node:
         return self.name# + "\r\nNode Degree:\t" + str(self.degree)
     def __repr__(self):
         return self.__str__()
+
+    def hasoutedge(self, node):
+        for edge in self.outedges:
+            if edge.outnode == node:
+                return True
+        return False
+    
     def addoutedge(self, edge):
         if not(edge in self.outedges):
             self.outedges.append(edge)
@@ -79,8 +86,6 @@ class Rgraph(object):
             node.addinnode(n)
             nodequeue.append(n)
         completednodes.append(node)
-        print(node.name)
-        print(str(nodequeue))
         while nodequeue:            
             node = nodequeue.popleft()
             possiblenodes = copy.copy(self.nodes)
@@ -106,8 +111,6 @@ class Rgraph(object):
                 completednodes.append(node)
                                 
             elif len(possiblenodes) >= 1:
-                print(node.name)
-                print(possiblenodes)
                 outdeg = node.outdegree()
                 for i in range(0, degree - outdeg):
                     next = random.randint(0, len(possiblenodes) - 1)
@@ -123,10 +126,20 @@ class Rgraph(object):
                             nodequeue.append(pnode)                            
                 completednodes.append(node)
         
+    def resolve(self, m1, m2):
+        if m1 == m2:
+            return 0
+        else:
+            n1 = self.nodes[m1]
+            n2 = self.nodes[m2]
+            if n1.hasoutedge(n2):
+                return 1
+            else:
+                return 2
     def print(self):
         print("==============================")
         for node in self.nodes:
-            print("Node:\t" + str(node).zfill(3))
+            print("Node:\t" + str(node).zfill(4))
             print("\t" + str(node.outedges))
         print("==============================")
             
