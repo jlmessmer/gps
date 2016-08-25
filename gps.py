@@ -41,24 +41,51 @@ class Game:
 
     def gameloop(self):
         print("This game of Graph-Paper-Scissors has %d possible moves (moves 0 - %d)" % (self.size, self.size - 1))
-        pmove = input("Please make your move, or enter Q to quit ")
-        while pmove.upper() != "Q":
-            pmove = int(pmove)
-            if pmove < 0 or pmove >= self.size:
-                print("Invalid move")
-                continue
-            cmove = random.randint(0, self.size - 1)
-            print(str(cmove))
-            result = self.graph.resolve(pmove, cmove)
-            if result == 0:
+        winner = 0
+        while True:
+            if winner == 0:
+                pmove = input("Please make your move, or enter Q to quit ")
+                pmove = int(pmove)
+                if pmove < 0 or pmove >= self.size:
+                    print("Invalid move")
+                    continue
+                cmove = random.randint(0, self.size - 1)
+                result = self.graph.resolve(pmove, cmove)                
+            elif winner == 1:
+                self.clear()
+                pmove = input("Please make your move ")
+                pmove = int(pmove)
+                if pmove < 0 or pmove >= self.size:
+                    print("Invalid move")
+                    continue
+                cmove = random.randint(0, self.size - 1)
+                result = self.graph.resolve(pmove, cmove)
+            else:
+                self.clear()
+                cmove = random.randint(0, self.size - 1)
+                print("CPU Move: %d" % cmove)
+                pmove = input("Please make your move ")
+                pmove = int(pmove)
+                if pmove < 0 or pmove >= self.size:
+                    print("Invalid move")
+                    continue
+
+                result = self.graph.resolve(pmove, cmove)
+
+
+            if result == 0:                
                 print("Tie: %d ties %d" % (pmove, cmove))
+                winner = 0
             elif result == 1:
                 print("Win: %d beats %d" % (pmove, cmove))
+                winner = 1
             else:
                 print("Loss: %d loses to %d" % (pmove, cmove))
-            input("Press any key to continue")
-            self.clear()
-            pmove = input("Please make your move, or enter Q to quit ")
+                winner = 2
+            pmove = input("Press any key to continue or Q to quit")
+            if pmove.upper() == "Q":
+                break
+
         self.clear()
         self.menu()
     def newgame(self):
