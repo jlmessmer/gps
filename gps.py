@@ -51,7 +51,7 @@ class Game:
             elif result == 1:
                 print("Win: %d beats %d" % (pmove, cmove))
             else:
-                print("Loss: %d loses to %d" % (cmove, pmove))
+                print("Loss: %d loses to %d" % (pmove, cmove))
             input("Press any key to continue")
             self.clear()
             pmove = input("Please make your move, or enter Q to quit ")
