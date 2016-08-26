@@ -110,10 +110,24 @@ class Game:
         if sel == 1:
             self.gameloop()
         elif sel == 2:
-            self.getgames()
+            self.clear()
+            print("[1] Find Game")
+            print("[2] Host Game")
+            sel = input("Please enter a selection, or press Q to return")
+            if sel.upper() == "Q":
+                self.mainmenu()
+            else:
+                if int(sel) == 1:                    
+                    self.getgames()
+                else:
+                    self.hostgame()
         else:
             self.mainmenu()
-            
+
+
+    def hostgame(self):
+        name = input("Game name: ")
+    
     def getgames(self):
         HOST, PORT = 'localhost', 9999
         data = " ".join(sys.argv[1:])        
