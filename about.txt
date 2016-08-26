@@ -1,0 +1,10 @@
+About GraphPaper-Scissors
+
+GraphPaper-Scissors (GPS) is a variant of the classic game Rock-Paper-Scissors. It is unique in several rather interesting ways:
+
+1) GPS can be played with an arbitrary number of possible moves, whereas Rock-Paper-Scissors has only 3
+2) GPS hides which moves win against other moves. For example, in traditional Rock-Paper-Scissors, each player knows that Rock beats Scissors, which beats Paper, which beats Rock.
+
+However, in GPS, this information is hidden from the player, so part of the challenge is to discover how the moves relate to each other.
+
+3) Because of this added element of problem solving, GPS adds a mechanic where the winning player of the previous round must make their move _first_, rather than both players making their moves simultaneously.

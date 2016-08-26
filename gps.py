@@ -1,13 +1,16 @@
 import rgraph
+import computer
 import os
 import sys
+import socket
 import random
+import server
 
 class Game:
     # Choose a size for the rps game
     def __init__(self, size):
         self.size = size
-        
+        self.computer = computer.Computer("CPU")
         self.graph = rgraph.Rgraph()
         self.graph.gennodes(self.size)
         self.graph.genedges()
@@ -20,8 +23,8 @@ class Game:
         print("Press any key to continue")
         input()
         self.clear()
-        self.menu()
-    def menu(self):
+        self.mainmenu()
+    def mainmenu(self):
         print("Main Menu")
         print("[1] New Game")
         print("[2] About This")
@@ -37,7 +40,7 @@ class Game:
             sys.exit()
         elif sel == 4:
             self.graph.print()
-            self.menu()
+            self.mainmenu()
 
     def gameloop(self):
         print("This game of Graph-Paper-Scissors has %d possible moves (moves 0 - %d)" % (self.size, self.size - 1))
@@ -87,14 +90,55 @@ class Game:
                 break
 
         self.clear()
-        self.menu()
-    def newgame(self):
-        self.clear()
-        print("New Game")
-        self.gameloop()
+        self.mainmenu()
+
     def about(self):
         self.clear()
-        print("About")
+        abt = open('about.txt', 'r')
+        for line in abt:
+            print(line)
+        input("Press any key to continue")
+        self.clear()
+        self.mainmenu()
+    def newgame(self):
+        self.clear()
+        print("Game Creation")
+        print("[1] Local Game vs CPU")
+        print("[2] Online Multiplayer")
+        sel = input("Please enter a selection, or press any key to return ")
+        sel = int(sel)
+        if sel == 1:
+            self.gameloop()
+        elif sel == 2:
+            self.getgames()
+        else:
+            self.mainmenu()
+            
+    def getgames(self):
+        HOST, PORT = 'localhost', 9999
+        data = " ".join(sys.argv[1:])        
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+        sock.connect((HOST, PORT))
+        sock.send(bytes("GET,Name,127.0.0.0,9999", "utf-8"))
+        received = str(sock.recv(1024), "utf-8")
+        sock.close()
+        opengames = received.split(',')
+        self.clear()
+        for i in range(0, len(opengames)):
+            print("[%d] %s" % (i+1, opengames[i]))
+        sel = input("Select a game you would like to play or press Q to return ")
+        if sel.upper() == 'Q' or int(sel) < 1 or int(sel) > len(opengames):
+            return
+        req = "REQUEST," + str(int(sel) - 1)
+        print(req)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((HOST, PORT))        
+        sock.send(bytes(req, "utf-8"))
+        received = str(sock.recv(1024), "utf-8")
+        print(received)
+        sock.close()
     def start(self):
         self.setup()
 
