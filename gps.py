@@ -177,7 +177,13 @@ class Game:
         name = input("What is your username? ")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((ip, int(port)))
-        sock.send(bytes("INIT," + name, "utf-8"))
+        sock.send(bytes("INIT," + name, "utf-8"))        
+        while True:
+            recv = str(sock.recv(1024), "utf-8")
+            print(recv)
+            sel = input("Press Q to quit or any key to continue: ")
+            if sel.upper() == "Q":
+                break
     def start(self):
         self.setup()
 
