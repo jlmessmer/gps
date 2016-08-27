@@ -5,6 +5,7 @@ import sys
 import socket
 import random
 import server
+import gameserver
 
 class Game:
     # Choose a size for the rps game
@@ -127,6 +128,24 @@ class Game:
 
     def hostgame(self):
         name = input("Game name: ")
+        ip = input("Your IP address (google \"What is my ip\" if you don't know): ")
+        port = input("Port number: ")
+        HOST, PORT = 'localhost', 9999
+        data = " ".join(sys.argv[1:])
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.connect((HOST, PORT))
+            sock.sendall(bytes("START,"+ name +"," + ip + "," + port, "utf-8"))
+
+            received = str(sock.recv(1024), "utf-8")
+        finally:
+            sock.close()
+        self.startserver(ip, port)
+
+    def startserver(self, host, port):
+        gameserver.start(host, port)
+
     
     def getgames(self):
         HOST, PORT = 'localhost', 9999
@@ -150,9 +169,15 @@ class Game:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((HOST, PORT))        
         sock.send(bytes(req, "utf-8"))
-        received = str(sock.recv(1024), "utf-8")
+        received = str(sock.recv(1024), "utf-8").split(',')
         print(received)
         sock.close()
+        self.connect(received[1], received[2])
+    def connect(self, ip, port):
+        name = input("What is your username? ")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((ip, int(port)))
+        sock.send(bytes("INIT," + name, "utf-8"))
     def start(self):
         self.setup()
 
