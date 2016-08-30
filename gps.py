@@ -130,7 +130,7 @@ class Game:
         name = input("Game name: ")
         ip = input("Your IP address (google \"What is my ip\" if you don't know): ")
         port = input("Port number: ")
-        HOST, PORT = 'localhost', 9999
+        HOST, PORT = '98.26.17.47', 9999
         data = " ".join(sys.argv[1:])
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -144,11 +144,11 @@ class Game:
         self.startserver(ip, port)
 
     def startserver(self, host, port):
-        gameserver.start(host, port)
+        gameserver.start(host, port, self.graph)
 
     
     def getgames(self):
-        HOST, PORT = 'localhost', 9999
+        HOST, PORT = '98.26.17.47', 9999
         data = " ".join(sys.argv[1:])        
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -181,9 +181,12 @@ class Game:
         while True:
             recv = str(sock.recv(1024), "utf-8")
             print(recv)
-            sel = input("Press Q to quit or any key to continue: ")
-            if sel.upper() == "Q":
-                break
+            recv = str(sock.recv(1024), "utf-8")
+            if recv == "MOVE":
+                move = input("Please make your move: ")
+                sock.send(bytes("MOVE," + move, "utf-8"))
+            recv = str(sock.recv(1024), "utf-8")
+            print(recv)
     def start(self):
         self.setup()
 

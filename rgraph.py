@@ -127,6 +127,9 @@ class Rgraph(object):
                 completednodes.append(node)
         
     def resolve(self, m1, m2):
+        # Return 0 if a tie
+        # Return 1 if first move wins (player 1)
+        # Return 2 if second move wins (player 2)
         if m1 == m2:
             return 0
         else:

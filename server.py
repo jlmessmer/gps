@@ -1,4 +1,5 @@
 import socketserver
+import socket
 
 class Connection:
     def __init__(self, name, ip, port):
@@ -40,8 +41,8 @@ class GPSHandler(socketserver.BaseRequestHandler):
 
 
 if __name__ == "__main__":
-    print("hi")
-    HOST, PORT = "localhost", 9999
-
+    #print("hi")
+    HOST, PORT = '', 80
+    print(HOST)
     server = socketserver.TCPServer((HOST, PORT), GPSHandler)
     server.serve_forever()
