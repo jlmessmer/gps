@@ -42,7 +42,7 @@ class GPSHandler(socketserver.BaseRequestHandler):
 
 if __name__ == "__main__":
     #print("hi")
-    HOST, PORT = '', 80
-    print(HOST)
+    HOST, PORT = '', 8000
+
     server = socketserver.TCPServer((HOST, PORT), GPSHandler)
     server.serve_forever()

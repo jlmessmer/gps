@@ -148,7 +148,7 @@ class Game:
 
     
     def getgames(self):
-        HOST, PORT = '98.26.17.47', 9999
+        HOST, PORT = '98.26.17.47', 8000
         data = " ".join(sys.argv[1:])        
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
