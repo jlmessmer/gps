@@ -175,6 +175,7 @@ class Game:
         self.connect(received[1], received[2])
     def connect(self, ip, port):
         name = input("What is your username? ")
+        ip = input("To what ip do you want to connect? ")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((ip, int(port)))
         sock.send(bytes("INIT," + name, "utf-8"))        
