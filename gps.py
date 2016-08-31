@@ -130,7 +130,7 @@ class Game:
         name = input("Game name: ")
         ip = input("Your IP address (google \"What is my ip\" if you don't know): ")
         port = input("Port number: ")
-        HOST, PORT = '98.26.17.47', 9999
+        HOST, PORT = '98.26.17.47', 8000
         data = " ".join(sys.argv[1:])
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
